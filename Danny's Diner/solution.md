@@ -142,6 +142,54 @@ WHERE R = '1';
 ## Answer: 
 -Customer A's first order after membership was curry 
 -Customer B's first order after membership was sushi
+***
+### 7. Which item was purchased just before the customer became a member?
+```sql
+    WITH dates as 
+    (SELECT sa.customer_id, order_date, product_name, rank() OVER (PARTITION BY sa.customer_id ORDER BY order_date DESC) as R FROM dannys_diner.sales sa
+    JOIN dannys_diner.members mem
+    ON sa.customer_id = mem.customer_id
+    AND sa.order_date < mem.join_date
+    JOIN dannys_diner.menu me
+    ON sa.product_id = me.product_id)
+    SELECT customer_id,product_name, order_date FROM dates
+    WHERE R = '1';
+ ```
+
+# Results:
+
+| customer_id | product_name | order_date               |
+| ----------- | ------------ | ------------------------ |
+| A           | sushi        | 2021-01-01T00:00:00.000Z |
+| A           | curry        | 2021-01-01T00:00:00.000Z |
+| B           | sushi        | 2021-01-04T00:00:00.000Z |
+
+## Answer:
+-- Customer A purchased curry and sushi just before becoming a member
+-- Customer B purchased sushi just before becoming a member
+
+### 8. What is the total items and amount spent for each member before they became a member?
+```sql
+    SELECT sa.customer_id,COUNT(sa.product_id), SUM(price) FROM dannys_diner.sales sa
+    JOIN dannys_diner.members mem
+    ON sa.customer_id = mem.customer_id
+    AND sa.order_date < mem.join_date
+    JOIN dannys_diner.menu me
+    ON sa.product_id = me.product_id
+    GROUP BY sa.customer_id;
+```
+# Results: 
+
+| customer_id | count | sum |
+| ----------- | ----- | --- |
+| B           | 3     | 40  |
+| A           | 2     | 25  |
+
+## Answer: 
+-- Customer B spent 40 dollars on 3 items 
+-- Customer A spent 25 dollars on 2 items 
+
+
 
 
 
