@@ -40,6 +40,47 @@ ORDER BY customer_id ASC
 - Customer C visited 2 times.
 ***
 ### 3. What was the first item from the menu purchased by each customer?
+```sql
+WITH product as ( SELECT customer_id,product_name,RANK() OVER (PARTITION BY customer_id ORDER BY order_date ASC) as R, order_date
+FROM dannys_diner.sales sa
+JOIN dannys_diner.menu me
+ON sa.product_id = me.product_id)
+SELECT customer_id, product_name,order_date FROM product 
+WHERE R = 1;
+```
+### Answer:
+| customer_id | product_name | order_date               |
+| ----------- | ------------ | ------------------------ |
+| A           | curry        | 2021-01-01T00:00:00.000Z |
+| A           | sushi        | 2021-01-01T00:00:00.000Z |
+| B           | curry        | 2021-01-01T00:00:00.000Z |
+| C           | ramen        | 2021-01-01T00:00:00.000Z |
+| C           | ramen        | 2021-01-01T00:00:00.000Z |
+
+Double checking if customer C really had two ramen orders on one day (out of curiousity)
+```sql
+SELECT * FROM dannys_diner.sales
+WHERE customer_id = 'C'
+```
+
+# Results
+| customer_id | order_date               | product_id |
+| ----------- | ------------------------ | ---------- |
+| C           | 2021-01-01T00:00:00.000Z | 3          |
+| C           | 2021-01-01T00:00:00.000Z | 3          |
+| C           | 2021-01-07T00:00:00.000Z | 3          |
+
+Seems like they did in fact have two orders
+
+## Answer 
+- Customer A's first items were curry and sushi 
+- Customer B's first item was curry 
+- Customer C's first item was ramen
+
+
+
+
+
 
 
 
