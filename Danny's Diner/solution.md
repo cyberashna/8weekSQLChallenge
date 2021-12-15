@@ -188,8 +188,29 @@ WHERE R = '1';
 ## Answer: 
 -- Customer B spent 40 dollars on 3 items 
 -- Customer A spent 25 dollars on 2 items 
+***
+### 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
+```SQL
+    WITH product_points  AS (SELECT sa.customer_id, CASE product_name WHEN 'sushi' THEN SUM(price)*20 ELSE SUM(price)*10 END AS points 
+    FROM dannys_diner.sales sa            
+    JOIN dannys_diner.menu me
+    ON sa.product_id = me.product_id
+    GROUP BY customer_id, product_name)
+    SELECT customer_id, SUM(points) AS total_points FROM product_points
+    GROUP BY customer_id;
+ ```
+# Results: 
 
+| customer_id | total_points |
+| ----------- | ------------ |
+| B           | 940          |
+| C           | 360          |
+| A           | 860          |
 
+## Answer: 
+Customer A has 860 points 
+CUstomer B has 940 points
+CUstomer C has 360 points
 
 
 
