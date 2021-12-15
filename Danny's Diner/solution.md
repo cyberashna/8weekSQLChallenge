@@ -28,12 +28,13 @@ ON sales.product_id = menu.product_id
 GROUP BY customer_id 
 ORDER BY customer_id ASC
 ````
-#### Answer:
+# Results: 
 | customer_id | visit_count |
 | ----------- | ----------- |
 | A           | 4          |
 | B           | 6          |
 | C           | 2          |
+## Answer:
 
 - Customer A visited 4 times.
 - Customer B visited 6 times.
@@ -77,7 +78,7 @@ Seems like they did in fact have two orders
 - Customer B's first item was curry 
 - Customer C's first item was ramen
 
-#### 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
+### 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
 ```sql
   SELECT product_name ,COUNT(sa.product_id) FROM dannys_diner.sales sa
   JOIN dannys_diner.menu me
@@ -94,7 +95,58 @@ Seems like they did in fact have two orders
 ## Answer: 
 Ramen is the most purchased item, it was purchased a total of eight times. 
 
-#### 5. Which item was the most popular for each customer?
+### 5. Which item was the most popular for each customer?
+```sql
+WITH pop as (SELECT
+  	customer_id,product_name,count(sa.product_id) as item_count, rank() OVER (PARTITION BY customer_id ORDER BY count(sa.product_id) DESC) as R
+FROM dannys_diner.sales sa
+JOIN dannys_diner.menu me
+ON sa.product_id = me.product_id 
+GROUP BY customer_id, product_name)
+SELECT customer_id,product_name as fav_item, item_count FROM pop
+WHERE R = '1';
+```
+# Results:
+| customer_id | fav_item | item_count |
+| ----------- | -------- | ---------- |
+| A           | ramen    | 3          |
+| B           | ramen    | 2          |
+| B           | curry    | 2          |
+| B           | sushi    | 2          |
+| C           | ramen    | 3          |
+
+## Answer: 
+-Customer A enjoys ramen the most 
+-Customer B enjoys all three items on the menu 
+-Customer C enjoys ramen the most
+
+### 6. Which item was purchased first by the customer after they became a member?
+```sql
+    WITH dates as 
+    (SELECT sa.customer_id, order_date, product_name, rank() OVER (PARTITION BY sa.customer_id ORDER BY order_date ASC) as R FROM dannys_diner.sales sa
+    JOIN dannys_diner.members mem
+    ON sa.customer_id = mem.customer_id
+    AND sa.order_date >= mem.join_date
+    JOIN dannys_diner.menu me
+    ON sa.product_id = me.product_id)
+    SELECT customer_id,product_name, order_date FROM dates
+    WHERE R = '1';
+```
+# Results:
+
+| customer_id | product_name | order_date               |
+| ----------- | ------------ | ------------------------ |
+| A           | curry        | 2021-01-07T00:00:00.000Z |
+| B           | sushi        | 2021-01-11T00:00:00.000Z |
+
+## Answer: 
+-Customer A's first order after membership was curry 
+-Customer B's first order after membership was sushi
+
+
+
+
+
 
 
 
