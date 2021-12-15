@@ -77,6 +77,29 @@ Seems like they did in fact have two orders
 - Customer B's first item was curry 
 - Customer C's first item was ramen
 
+#### 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
+```sql
+  SELECT product_name ,COUNT(sa.product_id) FROM dannys_diner.sales sa
+  JOIN dannys_diner.menu me
+  ON sa.product_id = me.product_id 
+  GROUP BY product_name;
+  ```
+# Results:
+| product_name | count |
+| ------------ | ----- |
+| ramen        | 8     |
+| sushi        | 3     |
+| curry        | 4     |
+
+## Answer: 
+Ramen is the most purchased item, it was purchased a total of eight times. 
+
+#### 5. Which item was the most popular for each customer?
+
+
+
+
+
 
 
 
