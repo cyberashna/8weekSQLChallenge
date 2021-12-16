@@ -9,12 +9,14 @@ ON sales.product_id = menu.product_id
 GROUP BY customer_id 
 ORDER BY customer_id ASC
 ```
+#### Results:
 | customer_id | total_sales |
 | ----------- | ----------- |
 | A           | 76          |
 | B           | 74          |
 | C           | 36          |
 
+### Answer:
 - Customer A spent $76.
 - Customer B spent $74.
 - Customer C spent $36.
@@ -28,7 +30,7 @@ ON sales.product_id = menu.product_id
 GROUP BY customer_id 
 ORDER BY customer_id ASC
 ````
-### Results: 
+#### Results: 
 | customer_id | visit_count |
 | ----------- | ----------- |
 | A           | 4          |
@@ -49,7 +51,7 @@ ON sa.product_id = me.product_id)
 SELECT customer_id, product_name,order_date FROM product 
 WHERE R = 1;
 ```
-### Results:
+#### Results:
 | customer_id | product_name | order_date               |
 | ----------- | ------------ | ------------------------ |
 | A           | curry        | 2021-01-01T00:00:00.000Z |
@@ -64,7 +66,7 @@ SELECT * FROM dannys_diner.sales
 WHERE customer_id = 'C'
 ```
 
-# Results
+#### Results
 | customer_id | order_date               | product_id |
 | ----------- | ------------------------ | ---------- |
 | C           | 2021-01-01T00:00:00.000Z | 3          |
@@ -85,7 +87,7 @@ Seems like they did in fact have two orders
   ON sa.product_id = me.product_id 
   GROUP BY product_name;
   ```
-# Results:
+#### Results:
 | product_name | count |
 | ------------ | ----- |
 | ramen        | 8     |
@@ -106,7 +108,7 @@ GROUP BY customer_id, product_name)
 SELECT customer_id,product_name as fav_item, item_count FROM pop
 WHERE R = '1';
 ```
-# Results:
+#### Results:
 | customer_id | fav_item | item_count |
 | ----------- | -------- | ---------- |
 | A           | ramen    | 3          |
@@ -115,7 +117,7 @@ WHERE R = '1';
 | B           | sushi    | 2          |
 | C           | ramen    | 3          |
 
-## Answer: 
+### Answer: 
 -Customer A enjoys ramen the most 
 -Customer B enjoys all three items on the menu 
 -Customer C enjoys ramen the most
@@ -132,14 +134,14 @@ WHERE R = '1';
     SELECT customer_id,product_name, order_date FROM dates
     WHERE R = '1';
 ```
-# Results:
+#### Results:
 
 | customer_id | product_name | order_date               |
 | ----------- | ------------ | ------------------------ |
 | A           | curry        | 2021-01-07T00:00:00.000Z |
 | B           | sushi        | 2021-01-11T00:00:00.000Z |
 
-## Answer: 
+### Answer: 
 -Customer A's first order after membership was curry 
 -Customer B's first order after membership was sushi
 ***
@@ -156,7 +158,7 @@ WHERE R = '1';
     WHERE R = '1';
  ```
 
-# Results:
+#### Results:
 
 | customer_id | product_name | order_date               |
 | ----------- | ------------ | ------------------------ |
@@ -164,7 +166,7 @@ WHERE R = '1';
 | A           | curry        | 2021-01-01T00:00:00.000Z |
 | B           | sushi        | 2021-01-04T00:00:00.000Z |
 
-## Answer:
+### Answer:
 -- Customer A purchased curry and sushi just before becoming a member
 -- Customer B purchased sushi just before becoming a member
 
@@ -178,18 +180,18 @@ WHERE R = '1';
     ON sa.product_id = me.product_id
     GROUP BY sa.customer_id;
 ```
-# Results: 
+#### Results: 
 
 | customer_id | count | sum |
 | ----------- | ----- | --- |
 | B           | 3     | 40  |
 | A           | 2     | 25  |
 
-## Answer: 
+### Answer: 
 -- Customer B spent 40 dollars on 3 items 
 -- Customer A spent 25 dollars on 2 items 
 ***
-### 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
+## 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 ```SQL
     WITH product_points  AS (SELECT sa.customer_id, CASE product_name WHEN 'sushi' THEN SUM(price)*20 ELSE SUM(price)*10 END AS points 
     FROM dannys_diner.sales sa            
@@ -199,7 +201,7 @@ WHERE R = '1';
     SELECT customer_id, SUM(points) AS total_points FROM product_points
     GROUP BY customer_id;
  ```
-# Results: 
+#### Results: 
 
 | customer_id | total_points |
 | ----------- | ------------ |
@@ -207,7 +209,7 @@ WHERE R = '1';
 | C           | 360          |
 | A           | 860          |
 
-## Answer: 
+### Answer: 
 Customer A has 860 points 
 CUstomer B has 940 points
 CUstomer C has 360 points
