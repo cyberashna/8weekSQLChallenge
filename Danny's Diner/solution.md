@@ -1,5 +1,5 @@
 
-### 1. What is the total amount each customer spent at the restaurant?
+## 1. What is the total amount each customer spent at the restaurant?
 
 ```SQL
 SELECT customer_id,SUM(price) AS total_sales
@@ -19,7 +19,7 @@ ORDER BY customer_id ASC
 - Customer B spent $74.
 - Customer C spent $36.
 ***
-### 2. How many days has each customer visited the restaurant?
+## 2. How many days has each customer visited the restaurant?
 ````sql
 SELECT customer_id,COUNT(DISTINCT order_date) AS days_visited
 FROM dannys_diner.sales
@@ -28,19 +28,19 @@ ON sales.product_id = menu.product_id
 GROUP BY customer_id 
 ORDER BY customer_id ASC
 ````
-# Results: 
+### Results: 
 | customer_id | visit_count |
 | ----------- | ----------- |
 | A           | 4          |
 | B           | 6          |
 | C           | 2          |
-## Answer:
+### Answer:
 
 - Customer A visited 4 times.
 - Customer B visited 6 times.
 - Customer C visited 2 times.
 ***
-### 3. What was the first item from the menu purchased by each customer?
+## 3. What was the first item from the menu purchased by each customer?
 ```sql
 WITH product as ( SELECT customer_id,product_name,RANK() OVER (PARTITION BY customer_id ORDER BY order_date ASC) as R, order_date
 FROM dannys_diner.sales sa
@@ -49,7 +49,7 @@ ON sa.product_id = me.product_id)
 SELECT customer_id, product_name,order_date FROM product 
 WHERE R = 1;
 ```
-### Answer:
+### Results:
 | customer_id | product_name | order_date               |
 | ----------- | ------------ | ------------------------ |
 | A           | curry        | 2021-01-01T00:00:00.000Z |
@@ -78,7 +78,7 @@ Seems like they did in fact have two orders
 - Customer B's first item was curry 
 - Customer C's first item was ramen
 
-### 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
+## 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
 ```sql
   SELECT product_name ,COUNT(sa.product_id) FROM dannys_diner.sales sa
   JOIN dannys_diner.menu me
@@ -95,7 +95,7 @@ Seems like they did in fact have two orders
 ## Answer: 
 Ramen is the most purchased item, it was purchased a total of eight times. 
 
-### 5. Which item was the most popular for each customer?
+## 5. Which item was the most popular for each customer?
 ```sql
 WITH pop as (SELECT
   	customer_id,product_name,count(sa.product_id) as item_count, rank() OVER (PARTITION BY customer_id ORDER BY count(sa.product_id) DESC) as R
@@ -120,7 +120,7 @@ WHERE R = '1';
 -Customer B enjoys all three items on the menu 
 -Customer C enjoys ramen the most
 
-### 6. Which item was purchased first by the customer after they became a member?
+## 6. Which item was purchased first by the customer after they became a member?
 ```sql
     WITH dates as 
     (SELECT sa.customer_id, order_date, product_name, rank() OVER (PARTITION BY sa.customer_id ORDER BY order_date ASC) as R FROM dannys_diner.sales sa
@@ -143,7 +143,7 @@ WHERE R = '1';
 -Customer A's first order after membership was curry 
 -Customer B's first order after membership was sushi
 ***
-### 7. Which item was purchased just before the customer became a member?
+## 7. Which item was purchased just before the customer became a member?
 ```sql
     WITH dates as 
     (SELECT sa.customer_id, order_date, product_name, rank() OVER (PARTITION BY sa.customer_id ORDER BY order_date DESC) as R FROM dannys_diner.sales sa
@@ -168,7 +168,7 @@ WHERE R = '1';
 -- Customer A purchased curry and sushi just before becoming a member
 -- Customer B purchased sushi just before becoming a member
 
-### 8. What is the total items and amount spent for each member before they became a member?
+## 8. What is the total items and amount spent for each member before they became a member?
 ```sql
     SELECT sa.customer_id,COUNT(sa.product_id), SUM(price) FROM dannys_diner.sales sa
     JOIN dannys_diner.members mem
@@ -211,6 +211,10 @@ WHERE R = '1';
 Customer A has 860 points 
 CUstomer B has 940 points
 CUstomer C has 360 points
+
+10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
+
+
 
 
 
