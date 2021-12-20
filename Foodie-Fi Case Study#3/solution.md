@@ -57,3 +57,27 @@ There are 1000 unique customers
 ### Seems that there were no trial plans started after 2020 
 
 #### 4. What is the customer count and percentage of customers who have churned rounded to 1 decimal place?
+```SQL
+    SELECT COUNT(*) AS churn, ROUND(100*COUNT(*)::NUMERIC/(SELECT COUNT(DISTINCT customer_id) FROM foodie_fi.subscriptions),1) AS percentage
+    FROM foodie_fi.subscriptions
+    WHERE plan_id = '4';
+```
+This was my first time converting data type in postgressql, the syntax is interesting
+## Results:
+| churn | percentage |
+| ----- | ---------- |
+| 307   | 30.7       |
+
+#### 5. How many customers have churned straight after their initial free trial - what percentage is this rounded to the nearest whole number?
+
+SELECT COUNT(DISTINCT(customer_id)) FROM foodie_fi.subscriptions
+             WHERE plan_id = '0'
+|count|
+|-----|
+|1000|
+
+# it seems that every customer has had a free trial before starting any paid subscription plan
+
+
+
+
