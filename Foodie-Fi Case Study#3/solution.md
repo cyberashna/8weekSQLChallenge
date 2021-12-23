@@ -68,7 +68,7 @@ This was my first time converting data type in postgressql, the syntax is intere
 | ----- | ---------- |
 | 307   | 30.7       |
 
-#### 5. How many customers have churned straight after their initial free trial - what percentage is this rounded to the nearest whole number?
+### 5. How many customers have churned straight after their initial free trial - what percentage is this rounded to the nearest whole number?
 
 SELECT COUNT(DISTINCT(customer_id)) FROM foodie_fi.subscriptions
              WHERE plan_id = '0'
@@ -76,8 +76,19 @@ SELECT COUNT(DISTINCT(customer_id)) FROM foodie_fi.subscriptions
 |-----|
 |1000|
 
-# it seems that every customer has had a free trial before starting any paid subscription plan
-
-
+#### just checking - it seems that every customer has had a free trial before starting any paid subscription plan
+```SQL
+  WITH roww AS (SELECT customer_id, plan_id, start_date, row_number() OVER (PARTITION BY customer_id ORDER BY plan_id) FROM foodie_fi.subscriptions
+)
+SELECT COUNT(*),ROUND(100 * COUNT(*) / (
+    SELECT COUNT(DISTINCT customer_id) 
+    FROM foodie_fi.subscriptions),0) AS churn_percentage FROM roww 
+WHERE row_number = 2
+AND plan_id = 4
+```
+#### Results:
+| churn | percentage |
+| ----- | ---------- |
+|92     | 9          |
 
 
