@@ -20,7 +20,7 @@ ORDER BY customer_id ASC
 - Customer A spent $76.
 - Customer B spent $74.
 - Customer C spent $36.
-***
+
 ## 2. How many days has each customer visited the restaurant?
 ````sql
 SELECT customer_id,COUNT(DISTINCT order_date) AS days_visited
@@ -66,7 +66,7 @@ SELECT * FROM dannys_diner.sales
 WHERE customer_id = 'C'
 ```
 
-#### Results
+## Results
 | customer_id | order_date               | product_id |
 | ----------- | ------------------------ | ---------- |
 | C           | 2021-01-01T00:00:00.000Z | 3          |
@@ -75,7 +75,7 @@ WHERE customer_id = 'C'
 
 Seems like they did in fact have two orders
 
-## Answer 
+### Answer 
 - Customer A's first items were curry and sushi 
 - Customer B's first item was curry 
 - Customer C's first item was ramen
@@ -94,7 +94,7 @@ Seems like they did in fact have two orders
 | sushi        | 3     |
 | curry        | 4     |
 
-## Answer: 
+### Answer: 
 Ramen is the most purchased item, it was purchased a total of eight times. 
 
 ## 5. Which item was the most popular for each customer?
@@ -210,9 +210,9 @@ WHERE R = '1';
 | A           | 860          |
 
 ### Answer: 
-Customer A has 860 points 
-CUstomer B has 940 points
-CUstomer C has 360 points
+-- Customer A has 860 points 
+-- Customer B has 940 points
+-- Customer C has 360 points
 
 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
 
