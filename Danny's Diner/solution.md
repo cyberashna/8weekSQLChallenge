@@ -216,6 +216,42 @@ CUstomer C has 360 points
 
 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
 
+```SQL
+
+    WITH dates AS 
+    (
+     SELECT *, 
+      join_date + INTERVAL'6 days' AS valid_date, 
+      '2021-01-31'::DATE AS last_date
+     FROM dannys_diner.members AS m
+    )
+    ,points as (SELECT d.customer_id, sa.order_date, d.join_date, 
+     d.valid_date, d.last_date, men.product_name, men.price,
+     SUM(CASE
+      WHEN men.product_name = 'sushi' THEN 2 * 10 * men.price
+      WHEN sa.order_date BETWEEN d.join_date AND d.valid_date THEN 2 * 10 * men.price
+      ELSE 10 * men.price
+      END) AS points
+    FROM dates AS d
+    JOIN dannys_diner.sales AS sa
+     ON d.customer_id = sa.customer_id
+    JOIN dannys_diner.menu AS men
+     ON sa.product_id = men.product_id
+    WHERE sa.order_date < d.last_date
+    GROUP BY d.customer_id, sa.order_date, d.join_date, d.valid_date, d.last_date, men.product_name, men.price)
+    SELECT customer_id,SUM(points) 
+    FROM points
+    GROUP BY customer_id;
+  ```
+#### Results:
+| customer_id | sum  |
+| ----------- | ---- |
+| A           | 1370 |
+| B           | 820  |
+
+
+
+
 
 
 
